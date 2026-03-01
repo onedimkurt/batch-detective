@@ -64,3 +64,10 @@ MIN_SAMPLES_PER_BATCH: int = 3
 
 #: Minimum number of batches required to compute ICC
 MIN_BATCHES: int = 2
+
+#: Cramér's V threshold for moderate association warning (continuous vs categorical)
+CRAMERS_V_MODERATE: float = 0.50
+
+#: ICC upper bounds for traffic-light classification
+ICC_MODERATE_UPPER: float = 0.30
+ICC_STRONG_UPPER: float = 0.60

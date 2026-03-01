@@ -1,6 +1,7 @@
 """Stages 5, 6, 7: Collinearity detection, PC-metadata associations, and ICC."""
 
 import logging
+from batch_detective.constants import CRAMERS_V_COLLINEARITY, CRAMERS_V_MODERATE, ICC_STRONG, ICC_MODERATE_UPPER, ICC_STRONG_UPPER
 from typing import Dict, List, Optional, Tuple
 
 import numpy as np
@@ -105,27 +106,27 @@ def detect_collinearity(
             if type_a == "categorical" and type_b == "categorical":
                 metric = "Cramér's V"
                 metric_val = cramers_v(col_a, col_b)
-                threshold = 0.70
+                threshold = CRAMERS_V_COLLINEARITY
 
             elif type_a == "continuous" and type_b == "continuous":
                 metric = "|Pearson r|"
                 r = col_a.corr(pd.to_numeric(col_b, errors="coerce"))
                 metric_val = abs(r) if not np.isnan(r) else 0.0
-                threshold = 0.70
+                threshold = CRAMERS_V_COLLINEARITY
 
             elif type_a == "categorical" and type_b == "continuous":
                 metric = "eta²"
                 col_b_num = pd.to_numeric(col_b, errors="coerce").dropna()
                 col_a_aligned = col_a[col_b_num.index]
                 metric_val = eta_squared_anova(col_b_num, col_a_aligned)
-                threshold = 0.50
+                threshold = CRAMERS_V_MODERATE
 
             elif type_a == "continuous" and type_b == "categorical":
                 metric = "eta²"
                 col_a_num = pd.to_numeric(col_a, errors="coerce").dropna()
                 col_b_aligned = col_b[col_a_num.index]
                 metric_val = eta_squared_anova(col_a_num, col_b_aligned)
-                threshold = 0.50
+                threshold = CRAMERS_V_MODERATE
             else:
                 continue
 
@@ -583,11 +584,11 @@ def compute_icc_with_bootstrap(
     prop_moderate = float(np.mean(icc_values >= 0.30))
 
     # Tier
-    if icc_median < 0.10:
+    if icc_median < ICC_STRONG:
         tier = "negligible"
-    elif icc_median < 0.30:
+    elif icc_median < ICC_MODERATE_UPPER:
         tier = "mild"
-    elif icc_median <= 0.60:
+    elif icc_median <= ICC_STRONG_UPPER:
         tier = "moderate"
     else:
         tier = "strong"
