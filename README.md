@@ -298,7 +298,7 @@ ICC quantifies what fraction of transcriptome-wide variance is explained by a gr
 | 0.30 – 0.60 | Moderate |
 | > 0.60 | Strong |
 
-*(Thresholds after Koo & Mae, 2016)*
+*(Thresholds after Koo & Li, 2016)*
 
 **High ICC for a biological variable** (treatment, disease status) means your experiment worked — it is expected and not a problem.
 
@@ -568,7 +568,7 @@ If you use batch-detective in published research, please cite:
 
 And the underlying statistical methods:
 
-- **ICC interpretation:** Koo, T.K. & Mae, M.Y. (2016). A guideline of selecting and reporting intraclass correlation coefficients for reliability research. *Journal of Chiropractic Medicine*, 15(2), 155–163.
+- **ICC interpretation:** Koo, T.K. & Li, M.Y. (2016). A guideline of selecting and reporting intraclass correlation coefficients for reliability research. *Journal of Chiropractic Medicine*, 15(2), 155–163.
 - **FDR correction:** Benjamini, Y. & Hochberg, Y. (1995). Controlling the false discovery rate: a practical and powerful approach to multiple testing. *Journal of the Royal Statistical Society: Series B*, 57(1), 289–300.
 - **PCA implementation:** Pedregosa, F. et al. (2011). Scikit-learn: Machine learning in Python. *Journal of Machine Learning Research*, 12, 2825–2830.
 - **Outlier detection (LedoitWolf):** Ledoit, O. & Wolf, M. (2004). A well-conditioned estimator for large-dimensional covariance matrices. *Journal of Multivariate Analysis*, 88(2), 365–411.

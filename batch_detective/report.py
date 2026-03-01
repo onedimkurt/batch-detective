@@ -351,12 +351,12 @@ disproportionately to variance. Association between PC scores and metadata covar
 was assessed using the Kruskal-Wallis test with rank-based eta-squared as effect size
 for categorical covariates (eta-squared = max(0, (H-k+1)/(n-k))), and Spearman rank
 correlation with bootstrap 95% CI (n=1000 resamplings) for continuous covariates
-(Cohen, 1988). P-values were adjusted for multiple testing within each covariate using
+P-values were adjusted for multiple testing within each covariate using
 the Benjamini-Hochberg FDR procedure (Benjamini &amp; Hochberg, 1995). Intraclass
 correlation coefficients [ICC(1,1), one-way random effects model] were computed across
 variable genes using a vectorized ANOVA decomposition; 95% confidence intervals were
 estimated by bootstrap resampling of samples (n=1000). ICC values were interpreted per
-Koo &amp; Mae (2016). Batch labels were treated as randomly sampled from a population
+Koo &amp; Li (2016). Batch labels were treated as randomly sampled from a population
 (ICC(1,1) assumption); if batches are fixed, ICC values may underestimate true effect
 magnitude. {mahal_text}</p>
 
