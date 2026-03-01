@@ -3,3 +3,6 @@ __pycache__/
 *.pyo
 .DS_Store
 *.egg-info/
+batch_detective/__pycache__/
+batch_detective/**/__pycache__/
+batch_detective/*.egg-info/
