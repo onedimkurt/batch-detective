@@ -156,8 +156,7 @@ def validate_inputs(
     # Check duplicate column/index names
     # Read raw header to catch duplicates before pandas auto-renames them
     with open(counts_path, encoding="utf-8", errors="replace") as _f:
-        _header = _f.readline().rstrip("
-").split(_detect_delimiter(counts_path))
+        _header = _f.readline().rstrip("\n").split(_detect_delimiter(counts_path))
     _sample_cols = _header[1:]  # skip index column
     _seen, _dups = set(), []
     for _c in _sample_cols:
