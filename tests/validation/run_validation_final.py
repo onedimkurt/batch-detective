@@ -468,8 +468,11 @@ else:
 log("=" * 60)
 log("Merging into validation_panel_results.json...")
 
-with open(RESULTS_JSON) as f:
-    full_results = json.load(f)
+if os.path.exists(RESULTS_JSON):
+    with open(RESULTS_JSON) as f:
+        full_results = json.load(f)
+else:
+    full_results = {"datasets": [], "generated": None, "summary": {}}
 
 patched = {r["test_id"]: r for r in full_results["datasets"]}
 patched["3"] = d3_result
