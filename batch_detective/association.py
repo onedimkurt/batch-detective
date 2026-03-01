@@ -275,7 +275,7 @@ def build_conditioning_design_matrix(
     return np.hstack(matrices)
 
 
-def test_pc_associations(
+def run_pc_associations(
     pc_scores: np.ndarray,
     explained_variance_ratio: np.ndarray,
     metadata: pd.DataFrame,

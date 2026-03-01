@@ -9,7 +9,7 @@ from batch_detective.association import (
     compute_icc11_vectorized,
     bh_correct,
     detect_collinearity,
-    test_pc_associations,
+    run_pc_associations,
     compute_all_icc,
 )
 

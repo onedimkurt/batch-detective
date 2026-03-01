@@ -250,7 +250,7 @@ def _run_analysis(
     from .qc import QualityController
     from .normalizer import normalize_counts
     from .pca_analysis import run_pca
-    from .association import detect_collinearity, test_pc_associations, compute_all_icc
+    from .association import detect_collinearity, run_pc_associations, compute_all_icc
     from .outliers import detect_outliers
     from .gene_impact import get_top_batch_genes
     from .plots import generate_all_plots
@@ -333,7 +333,7 @@ def _run_analysis(
     collinearity_warnings = detect_collinearity(metadata_working, covariate_info)
 
     # STAGE 6: Associations
-    assoc_df = test_pc_associations(
+    assoc_df = run_pc_associations(
         pc_scores=pc_scores,
         explained_variance_ratio=explained_variance_ratio,
         metadata=metadata_working,

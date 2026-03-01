@@ -99,10 +99,10 @@ def test_star_force_passes(tmp_path):
 def test_featurecounts_annotation_removed(tmp_path):
     from batch_detective.validator import validate_inputs
     cp = tmp_path / "counts.csv"
-    cp.write_text(",Chr,Start,End,Strand,Length,S1,S2\ngene1,chr1,100,200,+,100,10,20\n")
+    cp.write_text("gene_id,Chr,Start,End,Strand,Length,S1,S2\ngene1,chr1,100,200,+,100,10,20\ngene2,chr2,300,400,+,150,30,25\n")
     mp = tmp_path / "meta.csv"
-    meta = pd.DataFrame({"batch": ["A", "B"]}, index=["S1", "S2"])
-    write_csv(meta, mp)
+    mp.write_text("sample_id,batch\nS1,A\nS2,B\n")
     counts_raw, *_ = validate_inputs(cp, mp)
     assert "Chr" not in counts_raw.columns
     assert "S1" in counts_raw.columns
+    assert "S2" in counts_raw.columns

@@ -96,12 +96,12 @@ def main():
                     pc_scores, evr, components, sample_ids = run_pca(log1p_selected, n_pcs)
 
                     from batch_detective.association import (
-                        detect_collinearity, test_pc_associations, compute_all_icc
+                        detect_collinearity, run_pc_associations, compute_all_icc
                     )
                     status.text(f"[5/7] {stages[4]}...")
                     progress.progress(70)
                     coll_warnings = detect_collinearity(metadata_working, covariate_info)
-                    assoc_df = test_pc_associations(pc_scores, evr, metadata_working, covariate_info)
+                    assoc_df = run_pc_associations(pc_scores, evr, metadata_working, covariate_info)
                     icc_table = compute_all_icc(log1p_selected, metadata_working, covariate_info)
 
                     from batch_detective.outliers import detect_outliers
