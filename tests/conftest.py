@@ -73,9 +73,6 @@ def synthetic_data():
             effect, size=(100, len(sample_idx))
         )
 
-    # Inject library size outliers in last 3 samples
-    base_counts[:, 21:24] = (base_counts[:, 21:24] * 0.25).astype(int)
-
     # Inject Mahalanobis outlier in sample 10
     base_counts[:, 10] += rng.poisson(200, size=n_genes)
 
@@ -85,6 +82,9 @@ def synthetic_data():
     scale = lib_target / lib_sizes
     for i in range(n_samples):
         base_counts[:, i] = (base_counts[:, i] * scale[i]).astype(int)
+
+    # Inject library size outliers AFTER rescaling so they survive
+    base_counts[:, 21:24] = (base_counts[:, 21:24] * 0.08).astype(int)
 
     counts = pd.DataFrame(
         base_counts.astype(int).clip(0),

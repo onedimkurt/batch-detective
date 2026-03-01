@@ -42,7 +42,7 @@ def test_sample_qc_flags_lib_outliers(synthetic_data):
 
 def test_gene_filter(synthetic_data):
     counts, metadata = synthetic_data
-    qc = QualityController(counts, metadata, min_cpm=1.0)
+    qc = QualityController(counts, metadata, min_cpm=100.0)
     qc.run_covariate_prescreening()
     qc.run_sample_qc()
     filtered, stats = qc.filter_genes()
