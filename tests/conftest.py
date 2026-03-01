@@ -84,6 +84,7 @@ def synthetic_data():
         base_counts[:, i] = (base_counts[:, i] * scale[i]).astype(int)
 
     # Inject library size outliers AFTER rescaling so they survive
+    # Reduce to ~8% of median to ensure 3-MAD detection
     base_counts[:, 21:24] = (base_counts[:, 21:24] * 0.08).astype(int)
 
     counts = pd.DataFrame(
