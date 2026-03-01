@@ -2,7 +2,7 @@
 
 **Statistical diagnosis of batch effects in bulk RNA-seq count matrices.**
 
-[![PyPI version](https://badge.fury.io/py/batch-detective.svg)](https://pypi.org/project/batch-detective/)
+[![PyPI version](https://img.shields.io/pypi/v/batch-detective)](https://pypi.org/project/batch-detective/)
 [![Python 3.8+](https://img.shields.io/badge/python-3.8%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Tests](https://github.com/onedimkurt/batch-detective/actions/workflows/tests.yml/badge.svg)](https://github.com/onedimkurt/batch-detective/actions)
