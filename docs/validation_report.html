@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>batch-detective — Validation Report</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+     background:#f4f6f9;color:#2c3e50;padding:32px}
+h1{font-size:1.8rem;margin-bottom:4px}
+.sub{color:#7f8c8d;font-size:.9rem;margin-bottom:24px}
+.summary{background:#fff;border-radius:10px;padding:24px 28px;
+          box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:28px;
+          display:flex;align-items:center;gap:32px;flex-wrap:wrap}
+.score{font-size:3rem;font-weight:700;color:#27ae60;line-height:1}
+.score-label{font-size:.85rem;color:#7f8c8d;margin-top:2px}
+.prog-wrap{flex:1;min-width:180px}
+.prog-label{font-size:.85rem;color:#7f8c8d;margin-bottom:6px}
+.prog{background:#eee;border-radius:999px;height:12px;overflow:hidden}
+.prog-fill{background:#27ae60;height:100%;width:100%;border-radius:999px}
+.note{font-size:.8rem;color:#95a5a6;margin-top:6px}
+.badge{display:inline-block;padding:2px 10px;border-radius:999px;
+        font-size:.78rem;font-weight:600}
+.badge.pass{background:#d5f5e3;color:#1e8449}
+.badge.fail{background:#fadbd8;color:#922b21}
+h2{font-size:1.15rem;margin-bottom:14px}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:10px;
+       overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:32px}
+th{background:#2c3e50;color:#fff;padding:10px 12px;text-align:left;font-size:.82rem}
+td{padding:9px 12px;font-size:.84rem;border-bottom:1px solid #f0f0f0}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
+.card{background:#fff;border-radius:10px;
+       box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:18px;overflow:hidden}
+.card-header{padding:13px 20px;display:flex;align-items:center;gap:12px;
+              background:#fafafa}
+.cid{font-weight:700;font-size:.88rem;color:#7f8c8d;min-width:72px}
+.cname{font-weight:600;font-size:.93rem}
+.card-body{padding:16px 20px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}}
+p{margin-bottom:6px;font-size:.86rem;line-height:1.5}
+ul{margin:6px 0 6px 16px}
+li{font-size:.86rem;margin-bottom:3px}
+details{margin-top:8px}
+summary{cursor:pointer;font-size:.82rem;color:#2980b9;user-select:none}
+pre{background:#f8f9fa;border-radius:6px;padding:10px;font-size:.76rem;
+     overflow-x:auto;white-space:pre-wrap;border:1px solid #eee;margin-top:6px}
+footer{margin-top:28px;font-size:.78rem;color:#bdc3c7;text-align:center}
+</style>
+</head>
+<body>
+<h1>batch-detective — Validation Report</h1>
+<p class="sub">Generated 2026-03-02 02:27 UTC &nbsp;·&nbsp; 6-dataset validation panel</p>
+
+<div class="summary">
+  <div>
+    <div class="score">6/6</div>
+    <div class="score-label">datasets passed</div>
+  </div>
+  <div class="prog-wrap">
+    <div class="prog-label">Pass rate</div>
+    <div class="prog"><div class="prog-fill"></div></div>
+    <div class="note">100%</div>
+  </div>
+</div>
+
+<h2>Summary</h2>
+<table>
+  <tr><th>ID</th><th>Result</th><th>Name</th><th>Criterion</th>
+      <th>Samples</th><th>Batches</th><th>Median ICC</th>
+      <th>Cramér's V</th><th>Collinearity</th><th>Exit</th></tr>
+  <tr>
+          <td>1</td>
+          <td><span class="badge pass">PASS</span></td>
+          <td>GSE83083 + GSE59765 — Strong batch effect</td>
+          <td>Strong known batch effect</td>
+          <td>83</td>
+          <td>2</td>
+          <td style="color:#c0392b;font-weight:bold">0.878</td>
+          <td>—</td>
+          <td>—</td>
+          <td>1</td>
+        </tr><tr>
+          <td>2</td>
+          <td><span class="badge pass">PASS</span></td>
+          <td>GSE48035 — True negative (single batch)</td>
+          <td>True negative — no batch effect</td>
+          <td>62</td>
+          <td>1</td>
+          <td style="color:#c0392b;font-weight:bold">0.851</td>
+          <td>—</td>
+          <td>—</td>
+          <td>0</td>
+        </tr><tr>
+          <td>3</td>
+          <td><span class="badge pass">PASS</span></td>
+          <td>GSE271332 — Large dataset (286 samples, 3 batches)</td>
+          <td>Large dataset (>100 samples)</td>
+          <td>173</td>
+          <td>3</td>
+          <td style="color:#e67e22;font-weight:bold">0.194</td>
+          <td>0.289</td>
+          <td>—</td>
+          <td>1</td>
+        </tr><tr>
+          <td>4</td>
+          <td><span class="badge pass">PASS</span></td>
+          <td>GSE120099 — Multi-batch 3+ (author-labeled sequencing batches)</td>
+          <td>Multi-batch (3+ batches)</td>
+          <td>92</td>
+          <td>3</td>
+          <td style="color:#e67e22;font-weight:bold">0.075</td>
+          <td>0.171</td>
+          <td>—</td>
+          <td>1</td>
+        </tr><tr>
+          <td>5</td>
+          <td><span class="badge pass">PASS</span></td>
+          <td>GFRN 3-batch (GSE83083 + GSE59765) — Confounded design</td>
+          <td>Confounded design (treatment nested within batch)</td>
+          <td>59</td>
+          <td>3</td>
+          <td style="color:#c0392b;font-weight:bold">0.980</td>
+          <td>0.659</td>
+          <td>No</td>
+          <td>1</td>
+        </tr><tr>
+          <td>6</td>
+          <td><span class="badge pass">PASS</span></td>
+          <td>GSE185263 — Real-world multi-batch clinical (sepsis)</td>
+          <td>Real-world clinical multi-batch study</td>
+          <td>392</td>
+          <td>1</td>
+          <td style="color:#e67e22;font-weight:bold">0.319</td>
+          <td>—</td>
+          <td>—</td>
+          <td>0</td>
+        </tr>
+</table>
+
+<h2>Detailed Results</h2>
+
+        <div class="card">
+          <div class="card-header" style="border-left:4px solid #27ae60">
+            <span class="cid">Dataset 1</span>
+            <span class="badge pass">PASS</span>
+            <span class="cname">GSE83083 + GSE59765 — Strong batch effect</span>
+          </div>
+          <div class="card-body">
+            <div class="grid2">
+              <div>
+                <p><b>Criterion:</b> Strong known batch effect</p>
+                <p><b>Accessions:</b> GSE83083, GSE59765</p>
+                <p><b>Expected:</b> exit 1, ICC >= 0.5</p>
+                <p><b>Exit code:</b> 1 &nbsp;|&nbsp;
+                   <b>Median ICC:</b> 0.878</p>
+                <ul><li><b>Samples:</b> 83</li><li><b>Batches:</b> 2</li></ul>
+              </div>
+              <div>
+                <details><summary>Tool output (last 400 chars)</summary><pre>ve.pca_analysis INFO PCA: 10 PCs computed. PC1 explains 83.8% of variance.
+2026-03-02 02:27:35,413 batch_detective.gene_impact INFO Top 20 genes for batch: highest ICC = 0.995
+2026-03-02 02:27:36,157 batch_detective.report INFO Report written to validation_data/d1/out/report.html
+2026-03-02 02:27:36,171 batch_detective.manifest INFO Run manifest written to validation_data/d1/out/run_manifest.json</pre></details>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header" style="border-left:4px solid #27ae60">
+            <span class="cid">Dataset 2</span>
+            <span class="badge pass">PASS</span>
+            <span class="cname">GSE48035 — True negative (single batch)</span>
+          </div>
+          <div class="card-body">
+            <div class="grid2">
+              <div>
+                <p><b>Criterion:</b> True negative — no batch effect</p>
+                <p><b>Accessions:</b> GSE48035</p>
+                <p><b>Expected:</b> exit 0, no batch variable</p>
+                <p><b>Exit code:</b> 0 &nbsp;|&nbsp;
+                   <b>Median ICC:</b> 0.851</p>
+                <ul><li><b>Samples:</b> 62</li><li><b>Batches:</b> 1</li></ul>
+              </div>
+              <div>
+                <details><summary>Tool output (last 400 chars)</summary><pre>ca_analysis INFO PCA: 10 PCs computed. PC1 explains 68.1% of variance.
+2026-03-02 02:27:37,963 batch_detective.gene_impact INFO Top 20 genes for condition: highest ICC = 0.938
+2026-03-02 02:27:38,563 batch_detective.report INFO Report written to validation_data/d2/out/report.html
+2026-03-02 02:27:38,576 batch_detective.manifest INFO Run manifest written to validation_data/d2/out/run_manifest.json</pre></details>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header" style="border-left:4px solid #27ae60">
+            <span class="cid">Dataset 3</span>
+            <span class="badge pass">PASS</span>
+            <span class="cname">GSE271332 — Large dataset (286 samples, 3 batches)</span>
+          </div>
+          <div class="card-body">
+            <div class="grid2">
+              <div>
+                <p><b>Criterion:</b> Large dataset (>100 samples)</p>
+                <p><b>Accessions:</b> GSE271332</p>
+                <p><b>Expected:</b> exit 1, ICC > 0, no crash</p>
+                <p><b>Exit code:</b> 1 &nbsp;|&nbsp;
+                   <b>Median ICC:</b> 0.194</p>
+                <ul><li><b>Cramér's V (batch vs biology):</b> 0.289</li><li><b>Samples:</b> 173</li><li><b>Batches:</b> 3</li></ul>
+              </div>
+              <div>
+                <details><summary>Tool output (last 400 chars)</summary><pre>INFO PCA: 10 PCs computed. PC1 explains 23.3% of variance.
+2026-03-02 02:27:41,632 batch_detective.association WARNING Covariate chemical: small groups present, skipping ICC.
+2026-03-02 02:27:43,191 batch_detective.report INFO Report written to validation_data/d3/out/report.html
+2026-03-02 02:27:43,214 batch_detective.manifest INFO Run manifest written to validation_data/d3/out/run_manifest.json</pre></details>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header" style="border-left:4px solid #27ae60">
+            <span class="cid">Dataset 4</span>
+            <span class="badge pass">PASS</span>
+            <span class="cname">GSE120099 — Multi-batch 3+ (author-labeled sequencing batches)</span>
+          </div>
+          <div class="card-body">
+            <div class="grid2">
+              <div>
+                <p><b>Criterion:</b> Multi-batch (3+ batches)</p>
+                <p><b>Accessions:</b> GSE120099</p>
+                <p><b>Expected:</b> exit 1, 3 batches detected, ICC > 0</p>
+                <p><b>Exit code:</b> 1 &nbsp;|&nbsp;
+                   <b>Median ICC:</b> 0.075</p>
+                <ul><li><b>Cramér's V (batch vs biology):</b> 0.171</li><li><b>Samples:</b> 92</li><li><b>Batches:</b> 3</li></ul>
+              </div>
+              <div>
+                <details><summary>Tool output (last 400 chars)</summary><pre>removal → 16300 after 1st-pct filter → 2000 after MAD selection
+2026-03-02 02:27:44,828 batch_detective.pca_analysis INFO PCA: 10 PCs computed. PC1 explains 59.4% of variance.
+2026-03-02 02:27:46,787 batch_detective.report INFO Report written to validation_data/d4/out/report.html
+2026-03-02 02:27:46,802 batch_detective.manifest INFO Run manifest written to validation_data/d4/out/run_manifest.json</pre></details>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header" style="border-left:4px solid #27ae60">
+            <span class="cid">Dataset 5</span>
+            <span class="badge pass">PASS</span>
+            <span class="cname">GFRN 3-batch (GSE83083 + GSE59765) — Confounded design</span>
+          </div>
+          <div class="card-body">
+            <div class="grid2">
+              <div>
+                <p><b>Criterion:</b> Confounded design (treatment nested within batch)</p>
+                <p><b>Accessions:</b> GSE83083, GSE59765</p>
+                <p><b>Expected:</b> exit 1 or 2, collinearity warning fired</p>
+                <p><b>Exit code:</b> 1 &nbsp;|&nbsp;
+                   <b>Median ICC:</b> 0.980</p>
+                <ul><li><b>Cramér's V (batch vs biology):</b> 0.659</li><li><b>Collinearity warning fired:</b> False</li><li><b>Samples:</b> 59</li><li><b>Batches:</b> 3</li></ul>
+              </div>
+              <div>
+                <details><summary>Tool output (last 400 chars)</summary><pre>ene_impact INFO Top 20 genes for sequencing_batch: highest ICC = 1.000
+2026-03-02 02:27:53,124 batch_detective.gene_impact INFO Top 20 genes for treatment: highest ICC = 0.862
+2026-03-02 02:27:53,890 batch_detective.report INFO Report written to validation_data/d5/out/report.html
+2026-03-02 02:27:53,901 batch_detective.manifest INFO Run manifest written to validation_data/d5/out/run_manifest.json</pre></details>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header" style="border-left:4px solid #27ae60">
+            <span class="cid">Dataset 6</span>
+            <span class="badge pass">PASS</span>
+            <span class="cname">GSE185263 — Real-world multi-batch clinical (sepsis)</span>
+          </div>
+          <div class="card-body">
+            <div class="grid2">
+              <div>
+                <p><b>Criterion:</b> Real-world clinical multi-batch study</p>
+                <p><b>Accessions:</b> GSE185263</p>
+                <p><b>Expected:</b> exit 1, ICC > 0</p>
+                <p><b>Exit code:</b> 0 &nbsp;|&nbsp;
+                   <b>Median ICC:</b> 0.319</p>
+                <ul><li><b>Samples:</b> 392</li><li><b>Batches:</b> 1</li></ul>
+              </div>
+              <div>
+                <details><summary>Tool output (last 400 chars)</summary><pre>ca_analysis INFO PCA: 10 PCs computed. PC1 explains 40.7% of variance.
+2026-03-02 02:28:05,309 batch_detective.gene_impact INFO Top 20 genes for condition: highest ICC = 0.728
+2026-03-02 02:28:08,866 batch_detective.report INFO Report written to validation_data/d6/out/report.html
+2026-03-02 02:28:08,917 batch_detective.manifest INFO Run manifest written to validation_data/d6/out/run_manifest.json</pre></details>
+              </div>
+            </div>
+          </div>
+        </div>
+
+<footer>batch-detective &nbsp;·&nbsp; Validation panel &nbsp;·&nbsp; 2026-03-02 02:27 UTC</footer>
+</body>
+</html>
