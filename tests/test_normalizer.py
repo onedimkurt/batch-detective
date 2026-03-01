@@ -16,14 +16,16 @@ def test_normalize_counts_shape(synthetic_data):
 def test_normalize_selects_variable_genes():
     """MAD selection should prefer high-variance genes."""
     rng = np.random.default_rng(0)
-    n = 10
+    n = 20
+    # Base low-variance counts
     counts = pd.DataFrame(
         rng.negative_binomial(50, 0.5, (50, n)),
         index=[f"g{i}" for i in range(50)],
         columns=[f"S{i}" for i in range(n)],
     )
-    # Make first 5 genes high variance
-    counts.iloc[:5] *= 10
+    # Make first 5 genes high variance by adding large group-specific signal
+    # Half samples get large addition, half do not - creates real MAD signal
+    counts.iloc[:5, :10] += 500
     _, selected, _ = normalize_counts(counts, n_variable_genes=5)
     top_genes = set(selected.index)
     high_var = {f"g{i}" for i in range(5)}

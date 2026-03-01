@@ -42,8 +42,8 @@ def test_sample_qc_flags_lib_outliers(synthetic_data):
 
 def test_gene_filter(synthetic_data):
     counts, metadata = synthetic_data
-    # Use high min_cpm to force filtering on high-count synthetic data
-    qc = QualityController(counts, metadata, min_cpm=100.0)
+    # Use very high min_cpm AND high min_samples_expressing to force filtering
+    qc = QualityController(counts, metadata, min_cpm=500.0, min_samples_expressing=20)
     qc.run_covariate_prescreening()
     qc.run_sample_qc()
     filtered, stats = qc.filter_genes()
