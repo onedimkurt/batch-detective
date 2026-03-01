@@ -5,9 +5,53 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "batch-detective"
 version = "0.1.0"
-requires-python = ">=3.8"
-description = "Batch effect diagnosis tool for bulk RNA-seq count matrices"
+requires-python = ">=3.10"
+description = "Statistical diagnosis of batch effects in bulk RNA-seq count matrices"
+readme = "README.md"
 license = {text = "MIT"}
+
+authors = [
+    {name = "Orhan Nedim Kurt", email = "goncelnedim0@gmail.com"},
+]
+
+keywords = [
+    "RNA-seq",
+    "batch effects",
+    "bioinformatics",
+    "transcriptomics",
+    "quality control",
+    "ICC",
+    "intraclass correlation",
+    "PCA",
+    "genomics",
+]
+
+classifiers = [
+    # Development status
+    "Development Status :: 3 - Alpha",
+
+    # Audience
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Healthcare Industry",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Topic :: Scientific/Engineering :: Medical Science Apps.",
+
+    # License
+    "License :: OSI Approved :: MIT License",
+
+    # Python versions
+    "Programming Language :: Python :: 3",
+            "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+
+    # Operating systems
+    "Operating System :: OS Independent",
+
+    # Environment
+    "Environment :: Console",
+]
+
 dependencies = [
     "pandas>=1.5.0",
     "numpy>=1.21.0",
@@ -25,8 +69,22 @@ progress = ["tqdm>=4.60.0"]
 stats    = ["pingouin>=0.5.3"]
 serve    = ["streamlit>=1.20.0"]
 pdf      = ["weasyprint>=57.0"]
-dev      = ["pytest>=7.0.0", "pytest-cov>=4.0.0", "black>=22.0.0", "flake8>=5.0.0"]
 full     = ["tqdm>=4.60.0", "pingouin>=0.5.3"]
+dev      = [
+    "pytest>=7.0.0",
+    "pytest-cov>=4.0.0",
+    "black>=22.0.0",
+    "flake8>=5.0.0",
+    "build>=0.10.0",
+    "twine>=4.0.0",
+]
+
+[project.urls]
+Homepage      = "https://github.com/YOUR_USERNAME/batch-detective"
+Repository    = "https://github.com/YOUR_USERNAME/batch-detective"
+Documentation = "https://github.com/YOUR_USERNAME/batch-detective#readme"
+"Bug Tracker" = "https://github.com/YOUR_USERNAME/batch-detective/issues"
+Changelog     = "https://github.com/YOUR_USERNAME/batch-detective/releases"
 
 [project.scripts]
 batch-detective = "batch_detective.cli:main"
@@ -36,3 +94,28 @@ where = ["."]
 
 [tool.setuptools.package-data]
 batch_detective = ["templates/*.html"]
+
+# ── Testing ────────────────────────────────────────────────────────────────────
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts   = "-v --tb=short"
+
+[tool.coverage.run]
+source = ["batch_detective"]
+omit   = ["tests/*", "batch_detective/streamlit_app.py"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+
+# ── Code style ─────────────────────────────────────────────────────────────────
+
+[tool.black]
+line-length    = 88
+target-version = ["py38", "py39", "py310", "py311", "py312"]
+
+[tool.flake8]
+max-line-length = 88
+extend-ignore   = ["E203", "W503"]
+exclude         = [".git", "__pycache__", "*.egg-info", "build", "dist"]
