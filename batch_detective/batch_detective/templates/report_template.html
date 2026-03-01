@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>batch-detective Report — {{ timestamp }}</title>
+<style>
+  :root {
+    --red: #e74c3c; --yellow: #f39c12; --green: #27ae60; --blue: #2980b9;
+    --gray: #95a5a6; --bg: #f8f9fa; --card: #ffffff; --border: #dee2e6;
+    --text: #212529; --muted: #6c757d;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+         background: var(--bg); color: var(--text); line-height: 1.6; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+  h1 { font-size: 1.8em; margin-bottom: 4px; }
+  h2 { font-size: 1.3em; margin: 20px 0 10px; border-bottom: 2px solid var(--border); padding-bottom: 6px; }
+  h3 { font-size: 1.1em; margin: 12px 0 6px; }
+  p { margin-bottom: 8px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+          padding: 16px; margin-bottom: 16px; }
+  .banner { border-radius: 8px; padding: 14px 18px; margin-bottom: 16px; font-weight: 500; }
+  .banner-red { background: #fdecea; border: 2px solid var(--red); color: #922b21; }
+  .banner-yellow { background: #fefbe7; border: 2px solid var(--yellow); color: #7d6608; }
+  .banner-green { background: #eafaf1; border: 2px solid var(--green); color: #1e8449; }
+  .banner-blue { background: #eaf2fb; border: 2px solid var(--blue); color: #1a5276; }
+  .banner-gray { background: #f2f3f4; border: 2px solid var(--gray); color: #515a5a; }
+  .traffic-light { font-size: 1.5em; display: flex; align-items: center; gap: 12px; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88em; }
+  th { background: #f1f3f5; padding: 8px 10px; text-align: left; border: 1px solid var(--border); font-weight: 600; }
+  td { padding: 7px 10px; border: 1px solid var(--border); }
+  tr:nth-child(even) { background: #f8f9fa; }
+  .sig { color: var(--red); font-weight: bold; }
+  .warn { color: var(--yellow); }
+  .ok { color: var(--green); }
+  .plot-img { max-width: 100%; border-radius: 6px; border: 1px solid var(--border); }
+  .plots-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(480px, 1fr)); gap: 16px; }
+  .plot-card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
+  .methods { font-size: 0.82em; color: var(--muted); line-height: 1.7; }
+  .footer { margin-top: 30px; padding: 14px; background: #f1f3f5; border-radius: 8px;
+            font-size: 0.82em; color: var(--muted); }
+  .low-power-mark { color: var(--yellow); font-weight: bold; cursor: help; }
+  code { background: #f1f3f5; padding: 2px 5px; border-radius: 3px; font-family: monospace; font-size: 0.9em; }
+  pre { background: #f1f3f5; padding: 12px; border-radius: 6px; overflow-x: auto; font-size: 0.85em; }
+  .collinearity-warn { background: #fef9e7; border: 1px solid #f39c12; border-radius: 6px; padding: 12px; margin-bottom: 10px; }
+  .toc { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 14px; margin-bottom: 20px; }
+  .toc ul { list-style: none; padding: 0; columns: 2; }
+  .toc li { margin: 3px 0; }
+  .toc a { color: var(--blue); text-decoration: none; font-size: 0.9em; }
+  .toc a:hover { text-decoration: underline; }
+  .section-anchor { scroll-margin-top: 20px; }
+  .icc-tier-negligible { color: var(--green); }
+  .icc-tier-mild { color: #f39c12; }
+  .icc-tier-moderate { color: #e67e22; }
+  .icc-tier-strong { color: var(--red); }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="card">
+  <h1>🔬 batch-detective Report</h1>
+  <p style="color:var(--muted)">Generated: {{ timestamp }} UTC &nbsp;|&nbsp; Tool v{{ version }} &nbsp;|&nbsp; {{ n_samples }} samples</p>
+  {% if anonymized %}
+  <p style="color:var(--blue);font-size:0.88em">⚠️ Sample IDs have been anonymized.</p>
+  {% endif %}
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <strong>Contents</strong>
+  <ul>
+    <li><a href="#traffic-light">1. Traffic Light Summary</a></li>
+    <li><a href="#executive-summary">2. Executive Summary</a></li>
+    <li><a href="#next-steps">3. Next Steps</a></li>
+    <li><a href="#qc-flags">4. QC Flags</a></li>
+    <li><a href="#data-overview">5. Data Overview</a></li>
+    <li><a href="#library-sizes">6. Library Sizes</a></li>
+    <li><a href="#scree">7. PCA Scree Plot</a></li>
+    <li><a href="#icc">8. ICC per Covariate</a></li>
+    <li><a href="#top-genes">9. Top Batch-Associated Genes</a></li>
+    <li><a href="#assoc-heatmap">10. Association Heatmap</a></li>
+    <li><a href="#assoc-table">11. Association Table</a></li>
+    <li><a href="#pca-plots">12. PCA Scatter Plots</a></li>
+    <li><a href="#distance-heatmap">13. Sample Distance Heatmap</a></li>
+    <li><a href="#outliers">14. Outlier Report</a></li>
+    <li><a href="#methods">15. Methods &amp; Limitations</a></li>
+  </ul>
+</div>
+
+<!-- BANNERS -->
+{% if repeated_measures_covariates %}
+<div class="banner banner-red">
+  ⚠️ <strong>REPEATED MEASURES DESIGN DETECTED</strong><br>
+  Covariates flagged as likely subject/patient IDs (skipped from all analysis):
+  {{ repeated_measures_covariates | join(', ') }}<br>
+  batch-detective assumes independent samples. For repeated measures RNA-seq, use tools
+  designed for paired/longitudinal analysis (e.g., DESeq2 with LRT, lme4, dream).
+</div>
+{% endif %}
+
+{% if low_power %}
+<div class="banner banner-red">
+  ⚠️ <strong>LOW STATISTICAL POWER</strong>: With {{ n_samples }} samples, this analysis
+  cannot reliably detect moderate batch effects (ICC &lt; {{ min_detectable_icc | round(2) }}).
+  A negative result does NOT rule out batch effects. All statistical values in this report
+  should be interpreted with caution. Collect more samples if possible.
+</div>
+{% endif %}
+
+{% if collinearity_warnings %}
+<div class="banner banner-yellow" id="collinearity">
+  <strong>⚠️ COLLINEARITY WARNINGS</strong>
+  {% for w in collinearity_warnings %}
+  <div class="collinearity-warn" style="margin-top:8px">
+    <strong>{{ w.cov_a }}</strong> and <strong>{{ w.cov_b }}</strong> are strongly collinear
+    ({{ w.metric }} = {{ w.value | round(2) }}).
+    Batch correction targeting one may remove biological signal from the other.
+    Interpret these covariates jointly. In a confounded design, computational batch
+    correction is not recommended.
+    {% if w.guidance %}<br><em>{{ w.guidance }}</em>{% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- SECTION 3: TRAFFIC LIGHT -->
+<div id="traffic-light" class="section-anchor">
+  <div class="banner {{ traffic_light_class }}">
+    <div class="traffic-light">
+      <span>{{ traffic_light_emoji }}</span>
+      <div>
+        <strong>{{ traffic_light_label }}</strong><br>
+        <span style="font-size:0.9em;font-weight:normal">{{ traffic_light_text }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 4: EXECUTIVE SUMMARY -->
+<div id="executive-summary" class="section-anchor card">
+  <h2>Executive Summary</h2>
+  {{ executive_summary | safe }}
+</div>
+
+<!-- SECTION 5: NEXT STEPS -->
+<div id="next-steps" class="section-anchor card">
+  <h2>Next Steps</h2>
+  {{ next_steps | safe }}
+</div>
+
+<!-- SECTION 6: QC FLAGS -->
+<div id="qc-flags" class="section-anchor card">
+  <h2>QC Flags</h2>
+  {% if qc_flagged_samples %}
+  <p>Flagged samples ({{ qc_flagged_samples | length }}):</p>
+  <table>
+    <tr>
+      <th>Sample</th><th>Library Outlier</th><th>Dominant Gene</th>
+      <th>Dom. Gene %</th><th>Zero Count %</th>
+      <th>Mahal. Outlier</th>
+    </tr>
+    {% for row in qc_flagged_samples %}
+    <tr>
+      <td><code>{{ row.sample_id }}</code></td>
+      <td class="{{ 'sig' if row.lib_outlier_flag else 'ok' }}">{{ '⚠️' if row.lib_outlier_flag else '✓' }}</td>
+      <td>{{ row.dominant_gene }}</td>
+      <td>{{ row.dominant_gene_pct | round(1) }}%</td>
+      <td class="{{ 'warn' if row.zero_count_pct > 50 else '' }}">{{ row.zero_count_pct | round(1) }}%</td>
+      <td class="{{ 'sig' if row.mahal_outlier_flag else 'ok' }}">{{ '⚠️' if row.mahal_outlier_flag else '✓' }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p class="ok">✅ No samples flagged for QC issues.</p>
+  {% endif %}
+</div>
+
+<!-- SECTION 7: DATA OVERVIEW -->
+<div id="data-overview" class="section-anchor card">
+  <h2>Data Overview</h2>
+  <table style="max-width:600px">
+    <tr><th>Parameter</th><th>Value</th></tr>
+    <tr><td>Samples analyzed</td><td>{{ n_samples }}</td></tr>
+    <tr><td>Genes in input</td><td>{{ n_genes_input }}</td></tr>
+    <tr><td>Genes analyzed (after filtering)</td><td>{{ n_genes_analyzed }}</td></tr>
+    <tr><td>Normalization</td><td>{{ normalization_method }}</td></tr>
+    <tr><td>n_variable_genes</td><td>{{ n_variable_genes }}</td></tr>
+    <tr><td>n_pcs</td><td>{{ n_pcs }}</td></tr>
+    <tr><td>min_cpm</td><td>{{ min_cpm }}</td></tr>
+    <tr><td>Covariates tested</td><td>{{ covariates_tested | join(', ') }}</td></tr>
+    {% if covariates_skipped %}
+    <tr><td>Covariates skipped</td><td>{{ covariates_skipped | join(', ') }}</td></tr>
+    {% endif %}
+    {% if condition_on %}
+    <tr><td>Conditioned on</td><td>{{ condition_on | join(', ') }}</td></tr>
+    {% endif %}
+  </table>
+</div>
+
+<!-- SECTION 8: LIBRARY SIZES -->
+<div id="library-sizes" class="section-anchor card">
+  <h2>Library Size Distribution</h2>
+  {% if plots.library_sizes %}
+  <img src="data:image/png;base64,{{ plots.library_sizes }}" class="plot-img" alt="Library sizes">
+  {% endif %}
+</div>
+
+<!-- SECTION 9: SCREE -->
+<div id="scree" class="section-anchor card">
+  <h2>PCA Scree Plot</h2>
+  {% if plots.scree_plot %}
+  <img src="data:image/png;base64,{{ plots.scree_plot }}" class="plot-img" alt="Scree plot">
+  {% endif %}
+</div>
+
+<!-- SECTION 10: ICC -->
+<div id="icc" class="section-anchor card">
+  <h2>ICC per Covariate (Headline Metric)</h2>
+  <p class="methods" style="margin-bottom:10px">
+    ICC values are computed using a one-way random effects model [ICC(1,1)].
+    This model treats batch labels as randomly sampled from a population of batches.
+    If your batches are fixed (specific dates, specific laboratories), ICC values
+    may slightly underestimate batch effect magnitude.
+  </p>
+  {% if plots.icc_barplot %}
+  <img src="data:image/png;base64,{{ plots.icc_barplot }}" class="plot-img" alt="ICC barplot">
+  {% endif %}
+
+  {% if icc_table_rows %}
+  <table style="margin-top:12px">
+    <tr>
+      <th>Covariate</th><th>Label</th><th>Groups</th>
+      <th>Median ICC</th><th>IQR</th><th>95% CI</th><th>Tier</th>
+      <th>% Genes ≥ Moderate</th>
+    </tr>
+    {% for row in icc_table_rows %}
+    <tr>
+      <td><strong>{{ row.covariate }}</strong></td>
+      <td>{{ row.label }}</td>
+      <td>{{ row.n_groups }}</td>
+      <td class="icc-tier-{{ row.icc_tier }}">
+        {% if low_power %}<span class="low-power-mark" title="Low power — interpret with caution">⚠️</span>{% endif %}
+        {{ row.median_icc | round(3) }}
+      </td>
+      <td>{{ row.iqr_lower | round(3) }} – {{ row.iqr_upper | round(3) }}</td>
+      <td>{{ row.ci_lower_95 | round(3) }} – {{ row.ci_upper_95 | round(3) }}</td>
+      <td class="icc-tier-{{ row.icc_tier }}">{{ row.icc_tier }}</td>
+      <td>{{ (row.prop_genes_moderate_plus * 100) | round(1) }}%</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p>No ICC data computed (no categorical covariates with sufficient samples).</p>
+  {% endif %}
+
+  <p class="methods" style="margin-top:10px">
+    Interpretation (Koo &amp; Mae, 2016): &lt;0.10 negligible | 0.10–0.30 mild | 0.30–0.60 moderate | &gt;0.60 strong
+  </p>
+</div>
+
+<!-- SECTION 11: TOP BATCH GENES -->
+{% if top_genes_data %}
+<div id="top-genes" class="section-anchor card">
+  <h2>Top Batch-Associated Genes</h2>
+  {% for cov_name, genes_rows in top_genes_data.items() %}
+  <h3>{{ cov_name }}</h3>
+  <p class="methods">These are the genes most strongly associated with {{ cov_name }}.
+  If these are housekeeping genes (GAPDH, ACTB, RPL*, RPS*), the batch effect may
+  primarily affect highly-expressed genes.</p>
+  <table>
+    <tr><th>Gene</th><th>ICC</th><th>Mean Expr (log CPM)</th><th>Expression Rank</th><th>Housekeeping</th></tr>
+    {% for row in genes_rows %}
+    <tr>
+      <td><code>{{ row.gene_id }}</code></td>
+      <td>{{ row.gene_icc | round(3) }}</td>
+      <td>{{ row.mean_expression_log_cpm | round(2) }}</td>
+      <td>{{ row.expression_rank_by_mean }}</td>
+      <td>{{ '✓' if row.is_housekeeping else '' }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% if plots['gene_icc_scatter_' + cov_name] is defined %}
+  <img src="data:image/png;base64,{{ plots['gene_icc_scatter_' + cov_name] }}" class="plot-img" alt="Gene ICC scatter">
+  {% endif %}
+  {% endfor %}
+</div>
+{% endif %}
+
+<!-- SECTION 12: ASSOCIATION HEATMAP -->
+<div id="assoc-heatmap" class="section-anchor card">
+  <h2>PC-Metadata Association Heatmap</h2>
+  {% if plots.association_heatmap %}
+  <img src="data:image/png;base64,{{ plots.association_heatmap }}" class="plot-img" alt="Association heatmap">
+  {% endif %}
+</div>
+
+<!-- SECTION 13: ASSOCIATION TABLE -->
+<div id="assoc-table" class="section-anchor card">
+  <h2>Association Table</h2>
+  <p class="methods">
+    Note: FDR correction is applied within each covariate independently. With
+    {{ n_covariates_tested }} covariates tested, the probability of at least one false positive
+    increases. Interpret borderline results (q=0.03–0.10) in context of effect sizes (ICC, η²).
+    {% if condition_on %}
+    Results condition on: {{ condition_on | join(', ') }}.
+    {% endif %}
+  </p>
+  {% if assoc_table_rows %}
+  <table>
+    <tr>
+      <th>Covariate</th><th>Type</th><th>PC</th><th>PC Var%</th>
+      <th>Effect Size</th><th>Type</th>
+      <th>p-value</th><th>q-value (BH)</th>
+      <th>Significant q&lt;0.05</th><th>95% CI</th>
+    </tr>
+    {% for row in assoc_table_rows %}
+    <tr class="{{ 'sig' if row.significant_q05 else '' }}">
+      <td>{{ row.covariate }}</td>
+      <td>{{ row.covariate_type }}</td>
+      <td>PC{{ row.pc }}</td>
+      <td>{{ (row.pc_variance_explained * 100) | round(1) }}%</td>
+      <td>
+        {% if low_power %}<span class="low-power-mark" title="Low power">⚠️</span>{% endif %}
+        {{ row.effect_size | round(3) if row.effect_size is not none else '—' }}
+      </td>
+      <td>{{ row.effect_size_type }}</td>
+      <td>{{ row.pval_raw | round(4) if row.pval_raw is not none else '—' }}</td>
+      <td>{{ row.pval_adjusted_bh | round(4) if row.pval_adjusted_bh is not none else '—' }}</td>
+      <td>{{ '✓' if row.significant_q05 else '' }}</td>
+      <td>{{ '[' + (row.ci_lower|round(3)|string) + ', ' + (row.ci_upper|round(3)|string) + ']' if row.ci_lower is not none else '—' }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p>No association results computed.</p>
+  {% endif %}
+</div>
+
+<!-- SECTION 14: PCA SCATTER PLOTS -->
+<div id="pca-plots" class="section-anchor card">
+  <h2>PCA Scatter Plots</h2>
+  <div class="plots-grid">
+  {% for key, b64 in plots.items() %}
+    {% if key.startswith('pca_') and not key.startswith('pca_') == false %}
+    <div class="plot-card">
+      <p class="methods">{{ key.replace('_', ' ') }}</p>
+      <img src="data:image/png;base64,{{ b64 }}" class="plot-img" alt="{{ key }}">
+    </div>
+    {% endif %}
+  {% endfor %}
+  </div>
+</div>
+
+<!-- SECTION 15: SAMPLE DISTANCE HEATMAP -->
+<div id="distance-heatmap" class="section-anchor card">
+  <h2>Sample Distance Heatmap</h2>
+  {% if plots.sample_distance_heatmap %}
+  <img src="data:image/png;base64,{{ plots.sample_distance_heatmap }}" class="plot-img" alt="Distance heatmap">
+  {% endif %}
+</div>
+
+<!-- SECTION 16: OUTLIER REPORT -->
+<div id="outliers" class="section-anchor card">
+  <h2>Outlier Report</h2>
+  {% if outlier_rows %}
+  <p>{{ outlier_rows | length }} sample(s) flagged as potential outliers:</p>
+  <table>
+    <tr>
+      <th>Sample</th><th>Detection Method</th><th>Mahalanobis Distance</th>
+      {% for col in outlier_meta_cols %}<th>{{ col }}</th>{% endfor %}
+    </tr>
+    {% for row in outlier_rows %}
+    <tr>
+      <td><code>{{ row.sample_id }}</code></td>
+      <td>{{ row.detection_method }}</td>
+      <td>{{ row.mahal_distance | round(2) if row.mahal_distance == row.mahal_distance else '—' }}</td>
+      {% for col in outlier_meta_cols %}<td>{{ row[col] if col in row else '—' }}</td>{% endfor %}
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p class="ok">✅ No outlier samples detected.</p>
+  {% endif %}
+</div>
+
+<!-- SECTION 17: METHODS -->
+<div id="methods" class="section-anchor card">
+  <h2>Statistical Methods &amp; Limitations</h2>
+  <div class="methods">
+    {{ methods_text | safe }}
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <strong>Data Integrity Statement:</strong> This report was generated from read-only analysis.
+  Your original data files have not been modified.<br>
+  For full reproducibility details, see <code>run_manifest.json</code> in the output directory.<br>
+  batch-detective v{{ version }} | {{ timestamp }} UTC
+</div>
+
+</div>
+</body>
+</html>

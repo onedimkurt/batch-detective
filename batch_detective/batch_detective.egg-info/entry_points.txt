@@ -1,0 +1,2 @@
+[console_scripts]
+batch-detective = batch_detective.cli:main
