@@ -6,3 +6,7 @@ __pycache__/
 batch_detective/__pycache__/
 batch_detective/**/__pycache__/
 batch_detective/*.egg-info/
+*.egg-info/
+*.zip
+dist/
+build/
