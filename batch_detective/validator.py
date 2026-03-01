@@ -153,11 +153,12 @@ def validate_inputs(
             f"Affected samples: {nan_samples[:10]}{'...' if len(nan_samples) > 10 else ''}"
         )
 
-    # Check duplicate column/index names
-    # Read raw header to catch duplicates before pandas auto-renames them
-    with open(counts_path, encoding="utf-8", errors="replace") as _f:
-        _header = _f.readline().rstrip("\n").split(_detect_delimiter(counts_path))
-    _sample_cols = _header[1:]  # skip index column
+    # Check duplicate column/index names by reading raw header
+    import csv as _csv
+    with open(counts_path, encoding="utf-8", errors="replace", newline="") as _f:
+        _reader = _csv.reader(_f)
+        _header = next(_reader)
+    _sample_cols = _header[1:]
     _seen, _dups = set(), []
     for _c in _sample_cols:
         if _c in _seen:
