@@ -10,3 +10,9 @@ batch_detective/*.egg-info/
 *.zip
 dist/
 build/
+validation_panel/
+validation_data/
+*.log
+run_validation*.py
+generate_validation_report.py
+validation_data/
