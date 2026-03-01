@@ -102,8 +102,7 @@ def test_run_existing_dir_no_overwrite(tmp_path):
         "--output-dir", str(out_dir),
     ])
     assert result.exit_code == 3
-    assert "overwrite" in result.output.lower() or "overwrite" in result.stderr.lower() or \
-           "--overwrite" in (result.output + result.stderr)
+    assert "overwrite" in result.output.lower() or "--overwrite" in result.output
 
 
 def test_run_existing_dir_with_overwrite(tmp_path):
@@ -176,7 +175,7 @@ def test_excel_rejection(tmp_path):
         "--output-dir", str(out_dir),
     ])
     assert result.exit_code == 3
-    assert "Excel" in (result.output + result.stderr)
+    assert "Excel" in result.output
 
 
 def test_manifest_contents(tmp_path):

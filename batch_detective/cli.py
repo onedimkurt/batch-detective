@@ -511,7 +511,7 @@ def _run_analysis(
         anonymized=config.get("anonymize_samples", False),
     )
 
-    click.echo(f"\n✅ Analysis complete. Report: {output_path / 'report.html'}")
+    click.echo(f"\nDone. Report: {output_path / 'report.html'}")
     return exit_code
 
 
@@ -718,11 +718,11 @@ def validate():
     batch_icc = float(icc_table.loc[icc_table["covariate"] == "batch", "median_icc"].iloc[0])
 
     if 0.20 <= batch_icc <= 0.80:
-        click.echo(f"✅ Validation passed: batch ICC = {batch_icc:.2f} (expected ~0.20–0.80)")
+        click.echo(f"PASSED. Validation passed: batch ICC = {batch_icc:.2f} (expected ~0.20-0.80)")
         sys.exit(0)
     else:
         click.echo(
-            f"❌ Validation FAILED: batch ICC = {batch_icc:.2f} "
+            f"FAILED. Validation FAILED: batch ICC = {batch_icc:.2f} "
             "(expected 0.20–0.80). Tool may be broken.",
             err=True,
         )
